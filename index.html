@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>শুভ ১৯তম জন্মদিন মায়া!</title>
+    <!-- Confetti CDN -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@400;600;800&display=swap" rel="stylesheet">
     
@@ -118,6 +119,7 @@
             transition: transform 0.8s ease, opacity 1s ease;
             margin: 15px auto;
             z-index: 150;
+            -webkit-tap-highlight-color: transparent;
         }
 
         @media (min-width: 600px) {
@@ -353,6 +355,7 @@
             width: 140px;
             height: 140px;
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
         }
         
         .box-back {
@@ -526,6 +529,7 @@
         let isCut = false;
 
         function blastConfetti() {
+            if (typeof confetti !== 'function') return;
             var duration = 4 * 1000;
             var end = Date.now() + duration;
 
@@ -557,7 +561,14 @@
             }
         }
 
-        cakeContainer.addEventListener('click', () => {
+        // Support both click and touch for mobile devices
+        cakeContainer.addEventListener('click', triggerCakeCut);
+        cakeContainer.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            triggerCakeCut();
+        }, { passive: false });
+
+        function triggerCakeCut() {
             if (isCut) return;
             isCut = true;
 
@@ -566,7 +577,6 @@
             setTimeout(() => { instruction.style.display = 'none'; }, 500);
             
             cakeContainer.style.cursor = 'default';
-
             knife.classList.add('chop');
 
             setTimeout(() => {
@@ -574,7 +584,9 @@
                 cake.classList.add('cut');
                 blastConfetti();
                 
-                confetti({ particleCount: 180, spread: 120, origin: { y: 0.5 } });
+                if (typeof confetti === 'function') {
+                    confetti({ particleCount: 180, spread: 120, origin: { y: 0.5 } });
+                }
 
                 setTimeout(() => {
                     wishText.classList.add('show');
@@ -596,22 +608,7 @@
                 }, 1000);
 
             }, 600);
-        });
+        }
 
         const giftBtn = document.getElementById('giftBtn');
-        const giftModal = document.getElementById('giftModal');
-        const theBox = document.getElementById('theBox');
-        const joker = document.getElementById('joker');
-        let isBoxOpen = false;
-
-        giftBtn.addEventListener('click', () => {
-            giftModal.style.display = 'flex';
-        });
-
-        theBox.addEventListener('click', () => {
-            if(isBoxOpen) return;
-            isBoxOpen = true;
-            
-            theBox.classList.add('open');
-            
-            setInterval(
+        
