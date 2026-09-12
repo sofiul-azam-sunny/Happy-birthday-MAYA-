@@ -42,15 +42,15 @@
             font-size: 1.5rem;
             color: #ffd700;
             text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             animation: pulse 1.5s infinite;
             transition: opacity 0.5s ease;
-            z-index: 50;
+            z-index: 100;
             pointer-events: none;
         }
 
         @media (min-width: 600px) {
-            #instruction { font-size: 1.8rem; margin-bottom: 40px; }
+            #instruction { font-size: 1.8rem; margin-bottom: 30px; }
         }
 
         @keyframes pulse {
@@ -62,50 +62,52 @@
         /* Message Animations */
         .message-container {
             position: absolute;
-            top: 4%;
+            top: 3%;
             left: 50%;
             transform: translateX(-50%);
             width: 95%;
             max-width: 600px;
-            z-index: 20;
-            pointer-events: none;
+            z-index: 10;
+            pointer-events: none; /* কেক কাটার আগে ক্লিক ব্লক করবে না */
         }
 
         #wishText {
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: #ff9a9e;
             text-shadow: 0 0 15px #ff9a9e, 0 0 30px #fecfef;
             opacity: 0;
-            transform: scale(0.5) translateY(-50px);
-            transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            margin: 0 0 10px 0;
+            transform: scale(0.5) translateY(-30px);
+            transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin: 0 0 8px 0;
         }
 
         @media (min-width: 600px) {
-            #wishText { font-size: 3rem; margin: 0 0 15px 0; }
+            #wishText { font-size: 2.6rem; margin: 0 0 12px 0; }
         }
 
         #memoryText {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #fff;
-            background: rgba(0, 0, 0, 0.65);
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(5px);
-            padding: 20px;
+            padding: 15px 20px;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             border: 1px solid rgba(255,255,255,0.2);
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 1.5s ease 0.5s;
-            line-height: 1.6;
+            transform: translateY(20px);
+            transition: all 1.2s ease 0.4s;
+            line-height: 1.5;
+            max-height: 45vh;
+            overflow-y: auto;
         }
 
         #memoryText.show {
-            pointer-events: auto;
+            pointer-events: auto; /* লেখা আসার পর স্ক্রল বা বাটন কাজ করবে */
         }
 
         @media (min-width: 600px) {
-            #memoryText { font-size: 1.2rem; }
+            #memoryText { font-size: 1.15rem; padding: 20px; }
         }
 
         .show {
@@ -119,13 +121,13 @@
             width: 240px;
             height: 200px;
             cursor: pointer;
-            transition: transform 0.8s ease, opacity 1s ease; /* অপাসিটি ট্রানজিশন যোগ করা হলো */
-            margin-top: 20px;
-            z-index: 40;
+            transition: transform 0.8s ease, opacity 1s ease;
+            margin-top: 10px;
+            z-index: 150; /* যাতে সবার উপরে থাকে এবং সহজে ক্লিক খাওয়া যায় */
         }
 
         @media (min-width: 600px) {
-            .cake-container { width: 260px; height: 220px; margin-top: 40px; }
+            .cake-container { width: 260px; height: 220px; margin-top: 20px; }
         }
 
         .cake-container:hover {
@@ -140,7 +142,7 @@
             transform: translateX(-50%);
             font-size: 4rem;
             opacity: 0;
-            z-index: 60;
+            z-index: 200;
             pointer-events: none;
         }
         @media (min-width: 600px) { .knife { font-size: 5rem; top: -150px; } }
@@ -280,8 +282,8 @@
             height: 50px;
             border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
             animation: floatUp ease-in forwards;
-            z-index: 100; /* বেলুন যেন সামনে উড়ে তাই z-index বাড়ানো হলো */
-            pointer-events: none; /* বাটনে ক্লিক করতে যেন বাধা না দেয় */
+            z-index: 100;
+            pointer-events: none;
             box-shadow: inset -5px -5px 15px rgba(0,0,0,0.2);
         }
         .balloon::before {
@@ -309,7 +311,7 @@
 
         /* Gift Button */
         #giftBtnWrapper {
-            margin-top: 25px;
+            margin-top: 15px;
             opacity: 0;
             pointer-events: none;
             transition: opacity 1s ease;
@@ -320,8 +322,8 @@
             pointer-events: auto;
         }
         #giftBtn {
-            padding: 12px 30px;
-            font-size: 1.3rem;
+            padding: 10px 25px;
+            font-size: 1.1rem;
             font-family: 'Baloo Da 2', cursive;
             background: #ff4757;
             color: white;
@@ -337,7 +339,7 @@
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85);
-            z-index: 200;
+            z-index: 300;
             display: none;
             flex-direction: column;
             align-items: center;
@@ -346,7 +348,7 @@
         #giftModal h2 {
             color: #ffd700;
             font-size: 2rem;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
             text-shadow: 0 0 20px #ffd700;
             padding: 0 20px;
         }
@@ -465,7 +467,7 @@
         <div id="memoryText">
             সম্পর্কে তুই ভাতিজি হলেও, দিনশেষে আমার সেরা দোস্ত,
 ১৯-এ পা দিলি ঠিকই, কিন্তু বুদ্ধিটা কি আদৌ বাড়বে এবার, মনা? 🫤<br><br>
-তোর ১৯তম জন্মদিনে অনেক অনেক ভালোবাসা আর মনের গভীর থেকে দোয়া রইল! মহান আল্লাহ তোকে সব সময় সুস্থ রাখুক, হাসিখুশি রাখুক আর তোর জীবনের সব ভালো স্বপ্নগুলো পূরণ করুক। দোয়া করি এইবার ভার্সিটি ক্র্যাক কর<br><br>
+তোর ১৯তম জন্মদিনে অনেক অনেক ভালোবাসা আর মনের গভীর থেকে দোয়া রইল! মহান আল্লাহ তোকে সব সময় সুস্থ রাখুক, হাসিখুশি রাখুক আর তোর জীবনের সব ভালো স্বপ্নগুলো পূরণ করুক। দোয়া করি এইবার ভার্সিটি ক্র্যাক কর!<br><br>
 আজকের জন্মদিনের সেরা ট্রিটটা কিন্তু পাওনা রইল!😁 জীবনে অনেক দূর এগিয়ে যা আর সব সময় এরকমই বিন্দাস থাক (দোয়া করি)।😌 যাইহোক HAPPY BIRTHDAY MAYA! 🎉✨
             
             <br>
@@ -602,7 +604,4 @@
                         cakeContainer.style.display = 'none'; // পুরোপুরি স্ক্রিন থেকে রিমুভ
                     }, 1000);
                     
-                    releaseBalloons();
-
-                    setTimeout(() => {
-                        document.getElementById('giftBtnWra
+       
