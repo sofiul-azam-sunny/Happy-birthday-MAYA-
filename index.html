@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>শুভ ১৯তম জন্মদিন মায়া!</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(circle, #1f1c2c, #928dab);
+            color: white;
+            font-family: 'Baloo Da 2', cursive, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+            text-align: center;
+        }
+
+        /* Credits Tag */
+        .credits {
+            position: fixed;
+            bottom: 10px;
+            right: 15px;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-family: sans-serif;
+            z-index: 1000;
+            pointer-events: none;
+            letter-spacing: 0.5px;
+        }
+
+        /* Instruction Text */
+        #instruction {
+            font-size: 1.5rem;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+            margin-bottom: 30px;
+            animation: pulse 1.5s infinite;
+            transition: opacity 0.5s ease;
+            z-index: 50;
+            pointer-events: none;
+        }
+
+        @media (min-width: 600px) {
+            #instruction { font-size: 1.8rem; margin-bottom: 40px; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+
+        /* Message Animations */
+        .message-container {
+            position: absolute;
+            top: 4%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 95%;
+            max-width: 600px;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        #wishText {
+            font-size: 2rem;
+            color: #ff9a9e;
+            text-shadow: 0 0 15px #ff9a9e, 0 0 30px #fecfef;
+            opacity: 0;
+            transform: scale(0.5) translateY(-50px);
+            transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin: 0 0 10px 0;
+        }
+
+        @media (min-width: 600px) {
+            #wishText { font-size: 3rem; margin: 0 0 15px 0; }
+        }
+
+        #memoryText {
+            font-size: 1.1rem;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(5px);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.2);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1.5s ease 0.5s;
+            line-height: 1.6;
+        }
+
+        #memoryText.show {
+            pointer-events: auto;
+        }
+
+        @media (min-width: 600px) {
+            #memoryText { font-size: 1.2rem; }
+        }
+
+        .show {
+            opacity: 1 !important;
+            transform: scale(1) translateY(0) !important;
+        }
+
+        /* 3D Cake & Knife Container */
+        .cake-container {
+            position: relative;
+            width: 240px;
+            height: 200px;
+            cursor: pointer;
+            transition: transform 0.8s ease, opacity 1s ease; /* অপাসিটি ট্রানজিশন যোগ করা হলো */
+            margin-top: 20px;
+            z-index: 40;
+        }
+
+        @media (min-width: 600px) {
+            .cake-container { width: 260px; height: 220px; margin-top: 40px; }
+        }
+
+        .cake-container:hover {
+            transform: scale(1.05);
+        }
+
+        /* Animated Knife */
+        .knife {
+            position: absolute;
+            top: -120px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 4rem;
+            opacity: 0;
+            z-index: 60;
+            pointer-events: none;
+        }
+        @media (min-width: 600px) { .knife { font-size: 5rem; top: -150px; } }
+
+        .knife.chop {
+            animation: sliceCake 1.2s forwards;
+        }
+
+        @keyframes sliceCake {
+            0% { top: -150px; opacity: 0; transform: translateX(-50%) rotate(0deg); }
+            20% { top: -80px; opacity: 1; transform: translateX(-50%) rotate(0deg); }
+            50% { top: 60px; opacity: 1; transform: translateX(-50%) rotate(0deg); } 
+            80% { top: 130px; opacity: 1; transform: translateX(-50%) rotate(20deg); }
+            100% { top: 250px; opacity: 0; transform: translateX(-50%) rotate(40deg); }
+        }
+
+        /* 3D Cake Design */
+        .cake {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            perspective: 1000px;
+        }
+        @media (min-width: 600px) { .cake { height: 140px; } }
+
+        .cake-half {
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, #f4d03f, #f39c12);
+            position: absolute;
+            bottom: 0;
+            transition: transform 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        .left-half {
+            left: 0;
+            border-radius: 20px 0 0 15px;
+            border-right: 2px solid #b9770e;
+        }
+
+        .right-half {
+            right: 0;
+            border-radius: 0 20px 15px 0;
+            border-left: 2px solid #b9770e;
+        }
+
+        /* Pink Icing */
+        .icing {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 50px;
+            background: #ff7675;
+        }
+        @media (min-width: 600px) { .icing { height: 60px; } }
+        
+        .left-half .icing { border-radius: 20px 0 30px 10px; }
+        .right-half .icing { border-radius: 0 20px 10px 30px; }
+
+        /* Cherries */
+        .cherry {
+            position: absolute;
+            top: -12px;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle at 30% 30%, #ff4d4d, #c0392b);
+            border-radius: 50%;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.4);
+        }
+        @media (min-width: 600px) { .cherry { width: 25px; height: 25px; top: -15px; } }
+        
+        .left-half .cherry { left: 25px; }
+        .right-half .cherry { right: 25px; }
+
+        /* Number Candles */
+        .number-candle {
+            position: absolute;
+            top: -60px;
+            font-size: 60px;
+            font-weight: 800;
+            color: #fff;
+            -webkit-text-stroke: 2px #ff4757;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            z-index: 20;
+        }
+        @media (min-width: 600px) { .number-candle { font-size: 70px; top: -70px; } }
+        .left-half .number-candle { right: 15px; } 
+        .right-half .number-candle { left: 15px; }  
+
+        /* Flames */
+        .flame {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 15px;
+            height: 25px;
+            background: #ff9d00;
+            border-radius: 50% 50% 20% 20%;
+            box-shadow: 0 0 20px #ff9d00, 0 0 40px #ff9d00, 0 0 60px #ff0000;
+            animation: flicker 0.1s infinite alternate;
+            transition: opacity 0.3s ease;
+        }
+        @media (min-width: 600px) { .flame { width: 18px; height: 30px; top: -30px; } }
+
+        @keyframes flicker {
+            0% { transform: translateX(-50%) scale(1); opacity: 0.9; }
+            100% { transform: translateX(-50%) scale(1.1); opacity: 1; box-shadow: 0 0 30px #ff9d00, 0 0 50px #ff0000; }
+        }
+
+        /* Cake Cut Animation */
+        .cake.cut .left-half { transform: translateX(-40px) rotate(-10deg) translateY(20px); }
+        .cake.cut .right-half { transform: translateX(40px) rotate(10deg) translateY(20px); }
+
+        /* Cake Plate */
+        .plate {
+            position: absolute;
+            bottom: -15px;
+            width: 110%;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            left: -5%;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            z-index: -1;
+        }
+
+        /* Balloons */
+        .balloon {
+            position: absolute;
+            bottom: -100px;
+            width: 40px;
+            height: 50px;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            animation: floatUp ease-in forwards;
+            z-index: 100; /* বেলুন যেন সামনে উড়ে তাই z-index বাড়ানো হলো */
+            pointer-events: none; /* বাটনে ক্লিক করতে যেন বাধা না দেয় */
+            box-shadow: inset -5px -5px 15px rgba(0,0,0,0.2);
+        }
+        .balloon::before {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-bottom-color: inherit;
+        }
+        .balloon::after {
+            content: '';
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            width: 1.5px;
+            height: 60px;
+            background: rgba(255,255,255,0.6);
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-120vh) rotate(15deg); opacity: 0; }
+        }
+
+        /* Gift Button */
+        #giftBtnWrapper {
+            margin-top: 25px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s ease;
+            display: inline-block;
+        }
+        #giftBtnWrapper.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        #giftBtn {
+            padding: 12px 30px;
+            font-size: 1.3rem;
+            font-family: 'Baloo Da 2', cursive;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.5);
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Gift Modal & Box */
+        #giftModal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 200;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        #giftModal h2 {
+            color: #ffd700;
+            font-size: 2rem;
+            margin-bottom: 50px;
+            text-shadow: 0 0 20px #ffd700;
+            padding: 0 20px;
+        }
+        @media (min-width: 600px) { #giftModal h2 { font-size: 3rem; } }
+
+        .the-box-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            cursor: pointer;
+        }
+        
+        .box-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #902b20;
+            border-radius: 10px;
+            bottom: 0;
+            z-index: 1;
+        }
+
+        .box-front {
+            width: 100%;
+            height: 100%;
+            background: #e74c3c;
+            border-radius: 10px;
+            position: absolute;
+            bottom: 0;
+            z-index: 3;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
+        }
+        .box-front::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 100%;
+            background: #f1c40f;
+        }
+
+        .box-lid {
+            width: 110%;
+            height: 40px;
+            background: #c0392b;
+            position: absolute;
+            top: -20px;
+            left: -5%;
+            border-radius: 5px;
+            z-index: 4;
+            transition: transform 0.5s;
+            transform-origin: top left;
+        }
+        .box-lid::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 100%;
+            background: #f39c12;
+        }
+        .the-box-container.open .box-lid {
+            transform: rotate(-110deg) translateX(-15px);
+        }
+
+        .joker-spring {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%) translateY(40px);
+            z-index: 2;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .joker-spring.pop {
+            transform: translateX(-50%) translateY(-110px);
+        }
+        .joker-head {
+            font-size: 5rem;
+            line-height: 1;
+        }
+        .spring-coil {
+            width: 25px;
+            height: 60px;
+            background: repeating-linear-gradient(
+                to bottom,
+                #95a5a6,
+                #95a5a6 6px,
+                transparent 6px,
+                transparent 12px
+            );
+        }
+
+        /* Money Scatter */
+        .money-shower {
+            position: absolute;
+            font-size: 2.5rem;
+            z-index: 20;
+            pointer-events: none;
+            animation: scatter 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+        @keyframes scatter {
+            0% { transform: translate(0, 0) scale(0.5); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(1.5) rotate(var(--rot)); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="message-container">
+        <h1 id="wishText">শুভ ১৯তম জন্মদিন মায়া! 🎉</h1>
+        <div id="memoryText">
+            সম্পর্কে তুই ভাতিজি হলেও, দিনশেষে আমার সেরা দোস্ত,
+১৯-এ পা দিলি ঠিকই, কিন্তু বুদ্ধিটা কি আদৌ বাড়বে এবার, মনা? 🫤<br><br>
+তোর ১৯তম জন্মদিনে অনেক অনেক ভালোবাসা আর মনের গভীর থেকে দোয়া রইল! মহান আল্লাহ তোকে সব সময় সুস্থ রাখুক, হাসিখুশি রাখুক আর তোর জীবনের সব ভালো স্বপ্নগুলো পূরণ করুক। দোয়া করি এইবার ভার্সিটি ক্র্যাক কর<br><br>
+আজকের জন্মদিনের সেরা ট্রিটটা কিন্তু পাওনা রইল!😁 জীবনে অনেক দূর এগিয়ে যা আর সব সময় এরকমই বিন্দাস থাক (দোয়া করি)।😌 যাইহোক HAPPY BIRTHDAY MAYA! 🎉✨
+            
+            <br>
+            <div id="giftBtnWrapper">
+                <button id="giftBtn">🎁 গিফট বক্স</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="instruction"> কেকটিকে ছোট করে কেটে দে! 👇</div>
+
+    <div class="cake-container" id="cakeContainer">
+        <div class="knife" id="knife">🔪</div>
+        
+        <div class="cake" id="cake">
+            <div class="cake-half left-half">
+                <div class="icing"></div>
+                <div class="cherry"></div>
+                <div class="number-candle">
+                    <div class="flame"></div>
+                    1
+                </div>
+            </div>
+            
+            <div class="cake-half right-half">
+                <div class="icing"></div>
+                <div class="cherry"></div>
+                <div class="number-candle">
+                    <div class="flame"></div>
+                    9
+                </div>
+            </div>
+            <div class="plate"></div>
+        </div>
+    </div>
+
+    <!-- Gift Modal -->
+    <div id="giftModal">
+        <h2>এই যে তোর গিফট🙂‍↕️</h2>
+        <div class="the-box-container" id="theBox">
+            <div class="box-lid"></div>
+            <div class="box-back"></div>
+            <div class="joker-spring" id="joker">
+                <div class="joker-head">🤡</div>
+                <div class="spring-coil"></div>
+            </div>
+            <div class="box-front"></div>
+        </div>
+    </div>
+
+    <!-- Credits Line -->
+    <div class="credits">Created by Sofiul Azam Sunny</div>
+
+    <script>
+        const cakeContainer = document.getElementById('cakeContainer');
+        const knife = document.getElementById('knife');
+        const cake = document.getElementById('cake');
+        const flames = document.querySelectorAll('.flame');
+        const instruction = document.getElementById('instruction');
+        const wishText = document.getElementById('wishText');
+        const memoryText = document.getElementById('memoryText');
+
+        let isCut = false;
+
+        // Auto Fire Confetti Function
+        function blastConfetti() {
+            var duration = 4 * 1000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                confetti({ particleCount: 10, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#ffffff'] });
+                confetti({ particleCount: 10, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#ffffff'] });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        // Balloons Function
+        function releaseBalloons() {
+            const colors = ['#ff4757', '#1e90ff', '#2ed573', '#ffa502', '#ff6b81', '#9b59b6'];
+            for(let i=0; i<40; i++) {
+                setTimeout(() => {
+                    const balloon = document.createElement('div');
+                    balloon.classList.add('balloon');
+                    balloon.style.left = (Math.random() * 90) + 'vw';
+                    const bgColor = colors[Math.floor(Math.random() * colors.length)];
+                    balloon.style.backgroundColor = bgColor;
+                    balloon.style.borderBottomColor = bgColor;
+                    balloon.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                    document.body.appendChild(balloon);
+                    
+                    setTimeout(() => balloon.remove(), 7000);
+                }, Math.random() * 2500); 
+            }
+        }
+
+        // Click Event on Cake
+        cakeContainer.addEventListener('click', () => {
+            if (isCut) return;
+            isCut = true;
+
+            instruction.style.animation = 'none'; 
+            instruction.style.opacity = '0'; 
+            setTimeout(() => { instruction.style.display = 'none'; }, 500);
+            
+            cakeContainer.style.cursor = 'default';
+
+            // Start Knife Animation
+            knife.classList.add('chop');
+
+            setTimeout(() => {
+                
+                flames.forEach(flame => { flame.style.opacity = '0'; });
+                cake.classList.add('cut');
+                blastConfetti();
+                
+                confetti({ particleCount: 200, spread: 120, origin: { y: 0.5 } });
+
+                setTimeout(() => {
+                    wishText.classList.add('show');
+                    memoryText.classList.add('show');
+                    
+                    // কেক ভ্যানিশ (Vanish) করার কোড
+                    if(window.innerWidth < 600) {
+                        cakeContainer.style.transform = "scale(0.5) translateY(450px)";
+                    } else {
+                        cakeContainer.style.transform = "scale(0.7) translateY(250px)";
+                    }
+                    cakeContainer.style.opacity = '0'; // আস্তে করে গায়েব হয়ে যাবে
+                    
+                    setTimeout(() => {
+                        cakeContainer.style.display = 'none'; // পুরোপুরি স্ক্রিন থেকে রিমুভ
+                    }, 1000);
+                    
+                    releaseBalloons();
+
+                    setTimeout(() => {
+                        document.getElementById('giftBtnWra
