@@ -561,12 +561,12 @@
             }
         }
 
-        // Support both click and touch for mobile devices
+        // Reliable click event for all devices
         cakeContainer.addEventListener('click', triggerCakeCut);
-        cakeContainer.addEventListener('touchstart', (e) => {
+        cakeContainer.addEventListener('touchend', (e) => {
             e.preventDefault();
             triggerCakeCut();
-        }, { passive: false });
+        });
 
         function triggerCakeCut() {
             if (isCut) return;
@@ -611,4 +611,57 @@
         }
 
         const giftBtn = document.getElementById('giftBtn');
-        
+        const giftModal = document.getElementById('giftModal');
+        const theBox = document.getElementById('theBox');
+        const joker = document.getElementById('joker');
+        let isBoxOpen = false;
+
+        giftBtn.addEventListener('click', () => {
+            giftModal.style.display = 'flex';
+        });
+
+        theBox.addEventListener('click', () => {
+            if(isBoxOpen) return;
+            isBoxOpen = true;
+            
+            theBox.classList.add('open');
+            
+            setInterval(() => {
+                joker.classList.add('pop');
+                
+                setTimeout(throwMoney, 300);
+
+                setTimeout(() => {
+                    joker.classList.remove('pop');
+                }, 1500);
+                
+            }, 3000);
+        });
+
+        function throwMoney() {
+            for(let i=0; i<60; i++) {
+                setTimeout(() => {
+                    const money = document.createElement('div');
+                    money.classList.add('money-shower');
+                    money.innerText = Math.random() > 0.5 ? '💵' : '💸';
+                    
+                    const tx = (Math.random() - 0.5) * 700 + 'px'; 
+                    const ty = (Math.random() * -500 - 100) + 'px'; 
+                    const rot = (Math.random() * 720) + 'deg';
+                    
+                    money.style.setProperty('--tx', tx);
+                    money.style.setProperty('--ty', ty);
+                    money.style.setProperty('--rot', rot);
+                    
+                    money.style.left = '50%';
+                    money.style.top = '10%';
+
+                    theBox.appendChild(money);
+                    
+                    setTimeout(() => money.remove(), 1500);
+                }, Math.random() * 400);
+            }
+        }
+    </script>
+</body>
+</html>
